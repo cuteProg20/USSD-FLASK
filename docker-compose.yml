@@ -1,0 +1,10 @@
+# docker-compose.yml
+version: '3'
+services:
+  web:
+    build: .
+    command: python app.py
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
