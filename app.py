@@ -1,6 +1,16 @@
 from flask import Flask, request
+import requests
+from requests.auth import HTTPBasicAuth
 
 app = Flask(__name__)
+
+#Third-party API urls 
+THIRD_PARTY_API = "https://41.217.203.241:27443/broker/transfer"
+
+#mpesa details
+consumer_key= ''
+consumer_secret= ''
+
 
 @app.route('/ussd', methods=['POST'])
 def ussd():
@@ -32,5 +42,12 @@ def ussd():
 
     return response
 
+@app.route('/access_token')
+def token():
+    THIRD_PARTY_API_url= 'https://<broker-server-name-or-ip-or-address>:port/<broker-application>/b2c-request-url'
+
+    data = (requests.get(THIRD_PARTY_API_url, HTTPBasicAuth(consumer_secret, consumer_key) ) ).json()
+    return data
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int("3000"), debug = False)
+    app.run(host="0.0.0.0", port=int("3000"), debug = True)
