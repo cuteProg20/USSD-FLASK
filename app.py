@@ -1,16 +1,15 @@
 from flask import Flask, request
-import requests
-from requests.auth import HTTPBasicAuth
+# import requests
+# from requests.auth import HTTPBasicAuth
 
 app = Flask(__name__)
 
 #Third-party API urls 
-THIRD_PARTY_API = "https://41.217.203.241:27443/broker/transfer"
+THIRD_PARTY_API_URL = "https://41.217.203.241:27443/broker/transfer"
 
-#mpesa details
-consumer_key= ''
-consumer_secret= ''
 
+cusumer_key = ''
+cunsumer_secrete = ''
 
 @app.route('/ussd', methods=['POST'])
 def ussd():
@@ -33,21 +32,18 @@ def ussd():
     elif text == "1":
         response = "END Your balance is $10"
     elif text == "2":
-        response = "CON Enter amount to buy airtime"
-    elif text_array[0] == "2":
-        amount = text_array[1]
-        response = f"END You have successfully bought ${amount} airtime"
+       #Call the third-party API
+       api_response = request.get(THIRD_PARTY_API_URL)
+       if api_response.status_code==200:
+           data = api_response.json()
+
+        # Assuming the api returns json repose with a 'message' field
+       api_message = data.get('message', 'No data found')
+       response = f"END {api_message}"
     else:
         response = "END Invalid input"
 
     return response
-
-@app.route('/access_token')
-def token():
-    THIRD_PARTY_API_url= 'https://<broker-server-name-or-ip-or-address>:port/<broker-application>/b2c-request-url'
-
-    data = (requests.get(THIRD_PARTY_API_url, HTTPBasicAuth(consumer_secret, consumer_key) ) ).json()
-    return data
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int("3000"), debug = True)
