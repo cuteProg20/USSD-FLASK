@@ -6,8 +6,6 @@ app = Flask(__name__)
 customer_key = ''
 customer_secrets = ''
 
-THIRD_PARTY_API_URL = "https://41.217.203.241:27443/broker/transfer"
-
 # Register the Blueprint
 app.register_blueprint(ussd)
 

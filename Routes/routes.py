@@ -9,8 +9,8 @@ ussd = Blueprint('routes', __name__)
 base_url = ''
 
 def get_access_token():
-    consumer_key = 'your_consumer_key'
-    consumer_secret = 'your_consumer_secret'
+    consumer_key = 'UfELfLvSlWmxhgRoUA5Ef2Oz5z3k7vHLT5GA4m4D8WFI9877'
+    consumer_secret = 'EcocavejjYr6xKpA2YssFTQuEGa6wS5Cr1N1cMvFP92fFcupQO6jW31MuKESSG50'
     endpoint = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
 
     try:
@@ -38,7 +38,7 @@ def access_token_route():
 
 @ussd.route('/register', methods=['GET'])
 def registers():
-    endpoint = 'http://inforwise.co.tz/broker/'
+    endpoint = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
     access_token = get_access_token()
     if not access_token:
         return jsonify({'error': 'Failed to retrieve access token'}), 500
@@ -75,7 +75,7 @@ def test_payment():
 
 @ussd.route('/b2c')
 def make_payment():
-    endpoint = 'https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest'
+    endpoint = 'https://sandbox.safaricom.co.ke/mpesa/b2c/v3/paymentrequest'
     access_token = get_access_token()
     if not access_token:
         return jsonify({'error': 'Failed to retrieve access token'}), 500
@@ -83,16 +83,17 @@ def make_payment():
     my_endpoint = base_url + "/b2c/"
 
     data = {
-        "InitiatorName": "testapi",
-        "SecurityCredential": "your_security_credential",
-        "CommandID": "BusinessPayment",
-        "Amount": "200",
-        "PartyA": "600981",
-        "PartyB": "600981",
-        "Remarks": "Pay Salary",
-        "QueueTimeOutURL": my_endpoint + "timeout",
-        "ResultURL": my_endpoint + "result",
-        "Occasion": "Salary"
+    "OriginatorConversationID": "6b43c5e1-5fb1-4665-af47-9dcf52659d19",
+    "InitiatorName": "testapi",
+    "SecurityCredential": "n1Kui3rZvk50R7ELjfVdbDP0X5xZ5wHnp/Cnbdx43VJSA+LQEKeEP5+MfeTAN9wrkTiCprE6MRAfDhS0BtNt0WSoVFeP5x7Stu4FQ2bl7BCNiApPL90qyBF6cNLBl/jb1fGLrgbs3IT/CUiaCTjVyncQknsASzyNE/vD5Ru/8/mQQ3IE3levgLb6Y3yaSdeu8XwP7XZNJPDkui9GdMAuueHpWz8z6vsAKQ4HKo/2IzDNPeEsheMMeUj260avqM/lHiABktGF3lFm3Ibt3gOWZLvpgdbqXyq+sUNZmFc48EeVOmq3BL4x3dll/3U3+SsOsa2f9EIANh6/vTmuYwDjUg==",
+    "CommandID": "BusinessPayment",
+    "Amount": 10,
+    "PartyA": 600997,
+    "PartyB": 254708374149,
+    "Remarks": "Test remarks",
+    "QueueTimeOutURL": "https://mydomain.com/b2c/queue",
+    "ResultURL": "https://mydomain.com/b2c/result",
+    "Occasion": "",
     }
 
     res = requests.post(endpoint, json=data, headers=headers)
